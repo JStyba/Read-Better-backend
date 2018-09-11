@@ -1,13 +1,16 @@
 package com.readbetter.main.controller;
 
 import com.readbetter.main.model.Entry;
+import com.readbetter.main.model.dto.RespFactory;
 import com.readbetter.main.service.EntryService;
+import jdk.nashorn.internal.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -25,11 +28,14 @@ public class EntryController {
 //        return wordDefinition;
 //    }
     @RequestMapping(path = "", method = RequestMethod.GET)
-    public Entry getEntry(@RequestParam(name = "word") String word) throws IOException {
+    public ResponseEntity getEntry(@RequestParam(name = "word") String word) throws IOException {
+       List<String> defOpt =entryService.cleanedDefinitionsFromJson(entryService.getDefinitions(entryService.getDictionaryJson(word)));
 
-       List<String> def = entryService.cleanedDefinitionsFromJson(entryService.getDefinitions(entryService.getDictionaryJson(word)));
-       return entryService.createEntryToSend(word, def);
-
+        Optional<Entry> entry = entryService.createEntryToSend(word,defOpt);
+       if (entry.isPresent()) {
+           return RespFactory.result(entry.get());
+       }
+        return RespFactory.badRequest();
     }
 
 

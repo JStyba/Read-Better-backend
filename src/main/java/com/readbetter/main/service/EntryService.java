@@ -13,6 +13,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -125,8 +126,10 @@ public class EntryService implements IEntryService {
     }
 
     @Override
-    public Entry createEntryToSend(String word, List<String> defintions) {
-        return new Entry(word, defintions);
+    public Optional<Entry> createEntryToSend(String word, List<String> defintions) {
+        Entry entry = new Entry(defintions);
+        Optional<Entry> optionalEntry = Optional.ofNullable(entry);
+        return optionalEntry;
     }
 
 

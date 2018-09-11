@@ -13,14 +13,25 @@ import java.util.List;
 
 
 public class Entry {
-    @JsonManagedReference
-    String word;
+
     @JsonManagedReference
     private List<String> definitions;
 
     @Autowired
-    public Entry(String word, List<String> definitions) {
-        this.word = word;
+    public Entry(List<String> definitions) {
+
+        this.definitions = definitions;
+    }
+
+
+
+
+
+    public List<String> getDefinitions() {
+        return definitions;
+    }
+
+    public void setDefinitions(List<String> definitions) {
         this.definitions = definitions;
     }
 }
