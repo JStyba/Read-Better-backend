@@ -23,8 +23,9 @@ public class ScrapeWebService implements IScrapeWebService {
             return stringPage;
         } catch (IOException e) {
             e.printStackTrace();
+            return "Cannot find the page";
         }
-        return null;
+
     }
 
     @Override
