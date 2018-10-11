@@ -1,7 +1,9 @@
 package com.readbetter.main.controller;
 
+import com.readbetter.main.model.Definition;
 import com.readbetter.main.model.Entry;
 import com.readbetter.main.model.dto.RespFactory;
+import com.readbetter.main.repository.EntryRepository;
 import com.readbetter.main.service.EntryService;
 import jdk.nashorn.internal.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +16,12 @@ import java.util.Optional;
 
 @CrossOrigin(origins = "*")
 @RestController
-//@RequestMapping("/entry/")
+@RequestMapping("/entry/")
 public class EntryController {
 
 
-
+    @Autowired
+    private EntryRepository entryRepository;
     @Autowired
     private EntryService entryService;
 
@@ -27,16 +30,20 @@ public class EntryController {
 //        String wordDefinition = entryService.findWordDefinition(searchedWord);
 //        return wordDefinition;
 //    }
-    @RequestMapping(path = "", method = RequestMethod.GET)
+    @RequestMapping(path = "/translate", method = RequestMethod.GET)
     public ResponseEntity getEntry(@RequestParam(name = "word") String word) throws IOException {
-       List<String> defOpt =entryService.cleanedDefinitionsFromJson(entryService.getDefinitions(entryService.getDictionaryJson(word)));
+        List<Definition> defOpt = entryService.cleanedDefinitionsFromJson(entryService.getDefinitions(entryService.getDictionaryJson(word)));
 
-        Optional<Entry> entry = entryService.createEntryToSend(word,defOpt);
-       if (entry.isPresent()) {
-           return RespFactory.result(entry.get());
-       }
+        Optional<Entry> entry = entryService.createEntryToSend(word, defOpt);
+        if (entry.isPresent()) {
+            return RespFactory.result(entry.get());
+        }
         return RespFactory.badRequest();
     }
 
+    @RequestMapping(path = "/get", method = RequestMethod.GET)
+    public List<Entry> getAllEntries() {
+    return entryRepository.findAll();
+    }
 
 }

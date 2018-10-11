@@ -2,6 +2,7 @@ package com.readbetter.main.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.readbetter.main.model.Definition;
 import com.readbetter.main.model.Entry;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +10,6 @@ import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,8 +70,8 @@ public class EntryService implements IEntryService {
         HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Accept", "application/json");
-        conn.setRequestProperty("app_id", "3c699787");
-        conn.setRequestProperty("app_key", "4a30da605e25de91cf692d808bdb069d");
+        conn.setRequestProperty("app_id", "xxxxxxxx");
+        conn.setRequestProperty("app_key", "xxxxxxxxxxxxxxxxxxxxxxxxx");
 
         if (conn.getResponseCode() != 200) {
             throw new RuntimeException("Failed : HTTP error code : "
@@ -91,8 +91,8 @@ public class EntryService implements IEntryService {
     }
 
     @Override
-    public List<String> getDefinitions(JsonNode jsonResponse) {
-        List<String> stringDefintions = new ArrayList<>();
+    public List<Definition> getDefinitions(JsonNode jsonResponse) {
+        List<Definition> stringDefintions = new ArrayList<>();
         if (jsonResponse.isArray()) {
             for (final JsonNode objNode : jsonResponse) {
                 JsonNode lexicalEntries = objNode.get("lexicalEntries");
@@ -102,7 +102,7 @@ public class EntryService implements IEntryService {
                         JsonNode senses = obj2Node.get("senses");
                         for (final JsonNode obj3Node : senses) {
                             JsonNode definitions = obj3Node.get("definitions");
-                            stringDefintions.add(obj3Node.get("definitions").toString());
+                            stringDefintions.add(new Definition(obj3Node.get("definitions").toString()));
                         }
                     }
                 }
@@ -113,21 +113,21 @@ public class EntryService implements IEntryService {
     }
 
     @Override
-    public List<String> cleanedDefinitionsFromJson(List<String> rawDefinitions) {
+    public List<Definition> cleanedDefinitionsFromJson(List<Definition> rawDefinitions) {
         int i = 1;
-        List<String> cleanedDefinitions = new ArrayList<>();
-        for (String def :
+        List<Definition> cleanedDefinitions = new ArrayList<>();
+        for (Definition def :
                 rawDefinitions) {
 
-            def = def.replaceAll("[^,&&\\W&&\\S]", "");
+            def.setDefinition( def.getDefinition().replaceAll("[^,&&\\W&&\\S]", ""));
             cleanedDefinitions.add(def);
         }
         return cleanedDefinitions;
     }
 
     @Override
-    public Optional<Entry> createEntryToSend(String word, List<String> defintions) {
-        Entry entry = new Entry(defintions);
+    public Optional<Entry> createEntryToSend(String word, List<Definition> definitions) {
+        Entry entry = new Entry("test", definitions);
         Optional<Entry> optionalEntry = Optional.ofNullable(entry);
         return optionalEntry;
     }

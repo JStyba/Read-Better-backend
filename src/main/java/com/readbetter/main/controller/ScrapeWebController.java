@@ -16,11 +16,9 @@ import java.util.Optional;
 public class ScrapeWebController {
 
 
-    private ScrapeWebService scrapeWebService;
+
     @Autowired
-    public ScrapeWebController(ScrapeWebService scrapeWebService) {
-        this.scrapeWebService = scrapeWebService;
-    }
+    private ScrapeWebService scrapeWebService;
 
     @RequestMapping(path = "/scrape", method = RequestMethod.GET)
     public ResponseEntity getEntry(@RequestParam(name = "url") String url) throws IOException {
