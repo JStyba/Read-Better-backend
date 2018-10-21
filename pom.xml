@@ -3,12 +3,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>{APP_NAME}</groupId>
+    <groupId>readbetter</groupId>
     <artifactId>Read-Better</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>ReadBetter</name>
+    <name>Read-Better</name>
     <description>Read Better</description>
 
     <parent>
@@ -132,7 +132,7 @@
         <profile>
             <id>openshift</id>
             <build>
-                <finalName>{APP_NAME}</finalName>
+                <finalName>readbetter</finalName>
                 <plugins>
                     <plugin>
                         <artifactId>maven-war-plugin</artifactId>
