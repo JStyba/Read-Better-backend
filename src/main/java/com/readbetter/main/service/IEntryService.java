@@ -14,5 +14,7 @@ public interface IEntryService {
     List<Definition> getDefinitions(JsonNode jsonResponse);
     List<Definition> cleanedDefinitionsFromJson(List<Definition> rawDefinitions);
     Optional<Entry> createEntryToSend (String word, List<Definition> defintions);
+    JsonNode findInflection (String word) throws IOException;
+    String getInflection (JsonNode jsonResponse);
 
 }

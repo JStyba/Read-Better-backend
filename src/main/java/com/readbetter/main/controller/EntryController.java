@@ -32,7 +32,8 @@ public class EntryController {
 //    }
     @RequestMapping(path = "/translate", method = RequestMethod.GET)
     public ResponseEntity getEntry(@RequestParam(name = "word") String word) throws IOException {
-        List<Definition> defOpt = entryService.cleanedDefinitionsFromJson(entryService.getDefinitions(entryService.getDictionaryJson(word)));
+        String inflection = entryService.getInflection(entryService.findInflection(word));
+        List<Definition> defOpt = entryService.cleanedDefinitionsFromJson(entryService.getDefinitions(entryService.getDictionaryJson(inflection)));
 
         Optional<Entry> entry = entryService.createEntryToSend(word, defOpt);
         if (entry.isPresent()) {
