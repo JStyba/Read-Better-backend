@@ -48,10 +48,13 @@
     </properties>
 
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/io.fabric8/spring-cloud-kubernetes-core -->
         <dependency>
             <groupId>io.fabric8</groupId>
             <artifactId>spring-cloud-kubernetes-core</artifactId>
+            <version>0.1.6</version>
         </dependency>
+
         <!--security-->
         <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-core -->
         <dependency>
