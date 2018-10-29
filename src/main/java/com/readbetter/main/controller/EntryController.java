@@ -1,16 +1,21 @@
 package com.readbetter.main.controller;
 
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.readbetter.main.model.AppUser;
 import com.readbetter.main.model.Definition;
 import com.readbetter.main.model.Entry;
 import com.readbetter.main.model.dto.RespFactory;
+import com.readbetter.main.model.dto.Response;
+import com.readbetter.main.repository.AppUserRepository;
 import com.readbetter.main.repository.EntryRepository;
 import com.readbetter.main.service.EntryService;
-import jdk.nashorn.internal.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +29,8 @@ public class EntryController {
     private EntryRepository entryRepository;
     @Autowired
     private EntryService entryService;
+    @Autowired
+    private AppUserRepository appUserRepository;
 
     //    @RequestMapping(path = "/get", method = RequestMethod.GET)
 //    public String getEntry(@RequestParam(name = "searchedWord") String searchedWord) throws IOException {
@@ -44,7 +51,32 @@ public class EntryController {
 
     @RequestMapping(path = "/get", method = RequestMethod.GET)
     public List<Entry> getAllEntries() {
-    return entryRepository.findAll();
+        return entryRepository.findAll();
     }
 
+    @RequestMapping(path = "/add", method = RequestMethod.POST)
+    public ResponseEntity<Response> add(@RequestBody Entry entry) {
+
+//        entryService.addEntryToDatabse(entry);
+        System.out.println(entry);
+        return RespFactory.created();
+    }
+
+    @RequestMapping(path = "/def", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Response> deff(@RequestBody JsonNode entryList) {
+
+        Optional<AppUser> user = appUserRepository.findById(2l);
+        for (JsonNode n : entryList) {
+            Entry entry = new Entry();
+            entry.setWord(n.get("word").asText());
+            entry.setAppUser(user.get());
+            entry.setEntryUrl(n.get("entryUrl").asText());
+            entry.setTimestamp(n.get("timestamp").asText());
+
+            entryService.addEntryToDatabse(entry);
+        }
+
+        return RespFactory.created();
+    }
 }

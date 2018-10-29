@@ -2,8 +2,13 @@ package com.readbetter.main.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.readbetter.main.exceptions.UserDoesNotExistException;
+import com.readbetter.main.model.AppUser;
 import com.readbetter.main.model.Definition;
 import com.readbetter.main.model.Entry;
+import com.readbetter.main.repository.AppUserRepository;
+import com.readbetter.main.repository.EntryRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -19,7 +24,10 @@ import java.util.Optional;
 
 @Service
 public class EntryService implements IEntryService {
-
+    @Autowired
+    AppUserRepository appUserRepository;
+    @Autowired
+    EntryRepository entryRepository;
 
     @Override
     public JsonNode getDictionaryJson(String wordToLookUp) throws IOException {
@@ -133,5 +141,10 @@ public class EntryService implements IEntryService {
         return optionalEntry;
     }
 
+    @Override
+    public void addEntryToDatabse(Entry entry) {
+            entryRepository.saveAndFlush(entry);
+        }
+    }
 
-}
+

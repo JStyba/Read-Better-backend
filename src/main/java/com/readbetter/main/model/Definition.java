@@ -2,23 +2,30 @@ package com.readbetter.main.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Data
+
 @Entity
+@NoArgsConstructor
 public class Definition {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
     private Long id;
     private String definition;
-    @ManyToOne
+
+    @OneToOne
     @JsonBackReference
     private Entry entry;
 
+    public Definition(String definition, Entry entry) {
+        this.definition = definition;
+        this.entry = entry;
+    }
 
     public Definition(String definition) {
         this.definition = definition;
@@ -46,5 +53,12 @@ public class Definition {
 
     public void setEntry(Entry entry) {
         this.entry = entry;
+    }
+
+    @Override
+    public String toString() {
+        return "Definition{" +
+                "definition='" + definition + '\'' +
+                '}';
     }
 }
