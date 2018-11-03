@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginDto {
-    private String login;
+    private String username;
     private String password;
 
     public CharSequence getPassword() {
@@ -16,6 +16,6 @@ public class LoginDto {
     }
 
     public String getLogin() {
-        return login;
+        return username;
     }
 }

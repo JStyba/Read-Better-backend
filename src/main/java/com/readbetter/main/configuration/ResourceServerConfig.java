@@ -2,6 +2,7 @@ package com.readbetter.main.configuration;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
@@ -26,7 +27,9 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         http.
                 anonymous().disable()
                 .authorizeRequests()
-                .antMatchers("/users/**","/entry/**").authenticated()
+                .antMatchers(HttpMethod.GET, "/users/**","/entry/**").authenticated()
+                .antMatchers(HttpMethod.POST, "/users/**","/entry/**").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/users/**","/entry/**").authenticated()
                 .antMatchers("/users/register").permitAll()
                 .and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
     }

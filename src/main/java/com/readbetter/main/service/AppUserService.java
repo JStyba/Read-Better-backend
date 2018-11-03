@@ -72,9 +72,7 @@ public class AppUserService implements IAppUserService, UserDetailsService {
         if (loginUser.isPresent()) {
             throw new UserLoginAlreadyExistsException();
         }
-
         appUser.setPassword(encoder.encode(appUser.getPassword()));
-
         appUserRepository.save(appUser);
     }
 
@@ -88,10 +86,12 @@ public class AppUserService implements IAppUserService, UserDetailsService {
         return Optional.empty();
     }
 
-    @Override
-    public Optional<AppUser> findByLogin(String login) {
-        return Optional.empty();
-    }
+
+
+//    @Override
+//    public Optional<AppUser> findByUsername(String username) {
+//        return Optional.empty();
+//    }
 
     public PageResponse<AppUser> getAllUsers() {
         return getUsers(0);
@@ -102,30 +102,25 @@ public class AppUserService implements IAppUserService, UserDetailsService {
 //        return appUserRepository.findById(ownerId);
 //    }
 
-//    @Override
-//    public Optional<AppUser> findByLogin(String login) throws UserDoesNotExistException {
-//        return appUserRepository.findByLogin(login);
-//    }
+    @Override
+    public Optional<AppUser> findByUsername(String username) throws UserDoesNotExistException {
+        return appUserRepository.findByUsername(username);
+    }
 
-//    @Override
-//    public Optional<AppUser> getUserWithLoginAndPassword(LoginDto dto) throws UserDoesNotExistException {
-//        Optional<AppUser> foundUser = appUserRepository.findByLogin(dto.getLogin());
-//
-//        if (!foundUser.isPresent()) {
-//            throw new UserDoesNotExistException();
-//        } else {
-//            AppUser user = foundUser.get(); // wydobywam uzytkownika
-//            // sprawdzam (nizej) czy haslo zgadza sie z tym z bazy danych
-//            if (!encoder.matches(dto.getPassword(), user.getPassword())) {
-//                // jesli nie zgadza sie haslo to exception
-//                throw new UserDoesNotExistException();
-//
-//                // jesli sie zgadza to pomijam i zakonczy metodę
-//            }
-//        }
-//
-//        return foundUser;
-//    }
+    @Override
+    public Optional<AppUser> getUserWithUsernameAndPassword(LoginDto dto) throws UserDoesNotExistException {
+        Optional<AppUser> foundUser = appUserRepository.findByUsername(dto.getLogin());
+
+        if (!foundUser.isPresent()) {
+            throw new UserDoesNotExistException();
+        } else {
+            AppUser user = foundUser.get();
+            if (!encoder.matches(dto.getPassword(), user.getPassword())) {
+                throw new UserDoesNotExistException();
+            }
+        }
+        return foundUser;
+    }
 
 //    @Override
 //    public PageResponse<AppUser> getUsers(int page) {

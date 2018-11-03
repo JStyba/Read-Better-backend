@@ -2,6 +2,7 @@ package com.readbetter.main.service;
 
 
 import com.readbetter.main.exceptions.RegistrationException;
+import com.readbetter.main.exceptions.UserDoesNotExistException;
 import com.readbetter.main.model.AppUser;
 import com.readbetter.main.model.dto.LoginDto;
 import com.readbetter.main.model.dto.PageResponse;
@@ -18,8 +19,9 @@ public interface IAppUserService {
 //        PageResponse<AppUser> getAllUsers();
 
         Optional<AppUser> getUserWithId(long ownerId);
-//
-//        Optional<AppUser> getUserWithLoginAndPassword(LoginDto dto);
 
-        Optional<AppUser> findByLogin (String login);
+
+        Optional<AppUser> findByUsername (String login);
+
+    Optional<AppUser> getUserWithUsernameAndPassword(LoginDto dto) throws UserDoesNotExistException;
 }

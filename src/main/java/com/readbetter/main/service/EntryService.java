@@ -2,6 +2,7 @@ package com.readbetter.main.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.readbetter.main.exceptions.ElementNotFound;
 import com.readbetter.main.exceptions.UserDoesNotExistException;
 import com.readbetter.main.model.AppUser;
 import com.readbetter.main.model.Definition;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.net.ssl.HttpsURLConnection;
+import javax.xml.bind.Element;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -90,13 +92,12 @@ public class EntryService implements IEntryService {
                 for (final JsonNode obj1Node : lexicalEntries) {
                     JsonNode inflectionOf = obj1Node.get("inflectionOf");
                     for (final JsonNode obj2Node : inflectionOf) {
-                        return new String (obj2Node.get("id").toString().replaceAll("\"",""));
+                        return new String(obj2Node.get("id").toString().replaceAll("\"", ""));
                     }
                 }
             }
         }
         return "";
-
     }
 
     @Override
@@ -116,18 +117,16 @@ public class EntryService implements IEntryService {
                     }
                 }
             }
-
         }
         return stringDefintions;
     }
+
 
     @Override
     public List<Definition> cleanedDefinitionsFromJson(List<Definition> rawDefinitions) {
         int i = 1;
         List<Definition> cleanedDefinitions = new ArrayList<>();
-        for (Definition def :
-                rawDefinitions) {
-
+        for (Definition def : rawDefinitions) {
             def.setDefinition(def.getDefinition().replaceAll("[^,&&\\W&&\\S]", ""));
             cleanedDefinitions.add(def);
         }
@@ -143,8 +142,63 @@ public class EntryService implements IEntryService {
 
     @Override
     public void addEntryToDatabse(Entry entry) {
-            entryRepository.saveAndFlush(entry);
-        }
+        entryRepository.saveAndFlush(entry);
     }
+
+    @Override
+    public List<Entry> getAllEntries(Long appUserId) {
+        Optional<AppUser> appUser = appUserRepository.findById(appUserId);
+        if (appUser.isPresent()) {
+            return entryRepository.findAllByAppUser(appUser.get());
+        }
+        // TODO: albo exception
+        return new ArrayList<>();
+    }
+
+    @Override
+    public void deleteEntry(String word, AppUser appUser) throws ElementNotFound {
+        entryRepository.deleteEntryByWordAndAppUser(word, appUser);
+    }
+
+    @Override
+    public JsonNode getDictionaryJsonPl(String wordToLookUp) throws IOException {
+        URL url = new URL("https://glosbe.com/gapi/translate?from=eng&dest=pol&format=json&phrase=" + wordToLookUp + "&pretty=true");
+        HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+
+        if (conn.getResponseCode() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : "
+                    + conn.getResponseCode());
+        }
+        BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        StringBuilder stringBuilder = new StringBuilder();
+
+        String line = null;
+        while ((line = reader.readLine()) != null) {
+            stringBuilder.append(line + "\n");
+        }
+        String wordEntry = stringBuilder.toString();
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode arrNode = mapper.readTree(wordEntry);
+        return arrNode;
+    }
+
+    @Override
+    public List<Definition> getTranslationsPl(JsonNode jsonResponse) {
+        List<Definition> stringDefintions = new ArrayList<>();
+        System.out.println("this is jsonResponse" + jsonResponse.toString());
+        JsonNode root = jsonResponse.get("tuc");
+        for (final JsonNode outerArray : root) {
+            for (final JsonNode phrase : outerArray) {
+                if (phrase.get("text") != null) {
+                    System.out.println("this is it: " + phrase.get("text").asText());
+                    stringDefintions.add(new Definition(phrase.get("text").asText()));
+                }
+            }
+        }
+        System.out.println(stringDefintions);
+        return stringDefintions;
+    }
+}
 
 
