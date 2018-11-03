@@ -19,10 +19,4 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
 
     Optional<AppUser> findByUsername (String login);
     Optional<AppUser> findByEmail(String email);
-//    Page<AppUser> findAllBy(Pageable pageable);
-//    List<Entry> getAllById(Long id);
-
-
-
-
 }

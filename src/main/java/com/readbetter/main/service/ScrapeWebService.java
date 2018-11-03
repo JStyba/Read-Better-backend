@@ -25,7 +25,6 @@ public class ScrapeWebService implements IScrapeWebService {
             e.printStackTrace();
             return "Cannot find the page";
         }
-
     }
 
     @Override

@@ -2,27 +2,21 @@ package com.readbetter.main.controller;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.readbetter.main.exceptions.DuplicateEntryException;
 import com.readbetter.main.exceptions.ElementNotFound;
 import com.readbetter.main.model.AppUser;
 import com.readbetter.main.model.Definition;
 import com.readbetter.main.model.Entry;
-import com.readbetter.main.model.dto.LoginDto;
-import com.readbetter.main.model.dto.PageResponse;
 import com.readbetter.main.model.dto.RespFactory;
 import com.readbetter.main.model.dto.Response;
 import com.readbetter.main.repository.AppUserRepository;
 import com.readbetter.main.repository.EntryRepository;
 import com.readbetter.main.service.EntryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,11 +33,6 @@ public class EntryController {
     @Autowired
     private AppUserRepository appUserRepository;
 
-    //    @RequestMapping(path = "/get", method = RequestMethod.GET)
-//    public String getEntry(@RequestParam(name = "searchedWord") String searchedWord) throws IOException {
-//        String wordDefinition = entryService.findWordDefinition(searchedWord);
-//        return wordDefinition;
-//    }
     @RequestMapping(path = "/translate", method = RequestMethod.GET)
     public ResponseEntity getEntry(@RequestParam(name = "word") String word) throws IOException {
         String inflection = entryService.getInflection(entryService.findInflection(word));

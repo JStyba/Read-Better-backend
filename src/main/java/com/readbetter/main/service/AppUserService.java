@@ -86,21 +86,9 @@ public class AppUserService implements IAppUserService, UserDetailsService {
         return Optional.empty();
     }
 
-
-
-//    @Override
-//    public Optional<AppUser> findByUsername(String username) {
-//        return Optional.empty();
-//    }
-
     public PageResponse<AppUser> getAllUsers() {
         return getUsers(0);
     }
-
-//    @Override
-//    public Optional<AppUser> getUserWithId(long ownerId) {
-//        return appUserRepository.findById(ownerId);
-//    }
 
     @Override
     public Optional<AppUser> findByUsername(String username) throws UserDoesNotExistException {

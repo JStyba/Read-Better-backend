@@ -33,15 +33,6 @@ public class AppUser {
 
 
 public AppUser () {}
-
-
-//    public AppUser(String email, String login, String password) {
-//        this.login = login;
-//        this.password = password;
-//        this.email = email;
-//    }
-
-
     public Long getId() {
         return id;
     }

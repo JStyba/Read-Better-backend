@@ -31,8 +31,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     static final String SCOPE_READ = "read";
     static final String SCOPE_WRITE = "write";
     static final String TRUST = "trust";
-    static final int ACCESS_TOKEN_VALIDITY_SECONDS = 1*60*60;
-    static final int FREFRESH_TOKEN_VALIDITY_SECONDS = 6*60*60;
+    static final int ACCESS_TOKEN_VALIDITY_SECONDS = 1 * 60 * 60;
+    static final int FREFRESH_TOKEN_VALIDITY_SECONDS = 6 * 60 * 60;
 
     @Autowired
     private TokenStore tokenStore;
@@ -60,15 +60,13 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
 
     }
+
     @Bean
     public WebResponseExceptionTranslator loggingExceptionTranslator() {
         return new DefaultWebResponseExceptionTranslator() {
             @Override
             public ResponseEntity<OAuth2Exception> translate(Exception e) throws Exception {
-                // This is the line that prints the stack trace to the log. You can customise this to format the trace etc if you like
                 e.printStackTrace();
-
-                // Carry on handling the exception
                 ResponseEntity<OAuth2Exception> responseEntity = super.translate(e);
                 HttpHeaders headers = new HttpHeaders();
                 headers.setAll(responseEntity.getHeaders().toSingleValueMap());
@@ -77,6 +75,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
             }
         };
     }
+
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints.tokenStore(tokenStore)

@@ -11,17 +11,16 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IAppUserService {
-        List<AppUser> findAll();
-        void register(AppUser appUser) throws RegistrationException;
+    List<AppUser> findAll();
 
-        PageResponse<AppUser> getUsers(int page);
+    void register(AppUser appUser) throws RegistrationException;
 
-//        PageResponse<AppUser> getAllUsers();
+    PageResponse<AppUser> getUsers(int page);
 
-        Optional<AppUser> getUserWithId(long ownerId);
+    //        PageResponse<AppUser> getAllUsers();
+    Optional<AppUser> getUserWithId(long ownerId);
 
-
-        Optional<AppUser> findByUsername (String login);
+    Optional<AppUser> findByUsername(String login);
 
     Optional<AppUser> getUserWithUsernameAndPassword(LoginDto dto) throws UserDoesNotExistException;
 }

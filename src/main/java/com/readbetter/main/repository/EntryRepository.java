@@ -13,12 +13,8 @@ import java.util.Optional;
 @Repository
 public interface EntryRepository extends JpaRepository<Entry, Long> {
 
-
-
     Optional<Entry> findByWord(String word);
-
     List<Entry> findAllByAppUser(AppUser appUser);
-
     void deleteEntryByWordAndAppUser (String word, AppUser appUser);
 
 

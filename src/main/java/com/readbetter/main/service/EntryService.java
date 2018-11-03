@@ -3,7 +3,6 @@ package com.readbetter.main.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.readbetter.main.exceptions.ElementNotFound;
-import com.readbetter.main.exceptions.UserDoesNotExistException;
 import com.readbetter.main.model.AppUser;
 import com.readbetter.main.model.Definition;
 import com.readbetter.main.model.Entry;
@@ -11,13 +10,10 @@ import com.readbetter.main.repository.AppUserRepository;
 import com.readbetter.main.repository.EntryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.net.ssl.HttpsURLConnection;
-import javax.xml.bind.Element;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -151,7 +147,6 @@ public class EntryService implements IEntryService {
         if (appUser.isPresent()) {
             return entryRepository.findAllByAppUser(appUser.get());
         }
-        // TODO: albo exception
         return new ArrayList<>();
     }
 
