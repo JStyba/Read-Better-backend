@@ -97,8 +97,6 @@ public class EntryController {
             if (!entryRepository.findByWord(entry.getWord()).isPresent()) {
 
                 entryService.addEntryToDatabse(entry);
-            } else {
-                return RespFactory.badRequest();
             }
         }
 
