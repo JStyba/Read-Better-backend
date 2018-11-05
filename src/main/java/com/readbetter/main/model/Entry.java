@@ -2,16 +2,10 @@ package com.readbetter.main.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
+
 
 @NoArgsConstructor
 @Entity
@@ -25,6 +19,7 @@ public class Entry {
     private String word;
     private String timestamp;
     private String entryUrl;
+    private String pronunciationLinkBrE;
     @OneToMany (cascade = CascadeType.PERSIST, mappedBy = "entry")
     @JsonManagedReference
     private List<Definition> definitions;
@@ -45,7 +40,7 @@ public class Entry {
     public Entry(String word, List<Definition> definitions) {
         this.word = word;
         this.definitions = definitions;
-    }
+            }
 
     public Long getId() {
         return id;

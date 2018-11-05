@@ -19,9 +19,12 @@ import java.util.List;
 public class AppUserController {
 
 
-    @Autowired
-    AppUserService appUserService;
+    private AppUserService appUserService;
 
+    @Autowired
+    public void setAppUserService(AppUserService appUserService) {
+        this.appUserService = appUserService;
+    }
 
     @RequestMapping(path = "/register", method = RequestMethod.POST)
     public ResponseEntity<Response> register(@RequestBody AppUser appUser) {
@@ -32,6 +35,7 @@ public class AppUserController {
         }
         return RespFactory.created();
     }
+
     @CrossOrigin(value = "*", maxAge = 3600)
     @RequestMapping(path = "/list", method = RequestMethod.GET)
     public String list() {

@@ -29,16 +29,24 @@ import java.util.*;
 public class AppUserService implements IAppUserService, UserDetailsService {
     private static final int DEFAULT_PAGE_SIZE = 10;
 
-    AppUser appUser;
-    @Autowired
-    AppUserRepository appUserRepository;
-    @Autowired
+
+    private AppUserRepository appUserRepository;
     private PasswordEncoder encoder;
+
+    @Autowired
+    public void setAppUserRepository(AppUserRepository appUserRepository) {
+        this.appUserRepository = appUserRepository;
+    }
+
+    @Autowired
+    public void setEncoder(PasswordEncoder encoder) {
+        this.encoder = encoder;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-       Optional<AppUser> OptionalUser = appUserRepository.findByUsername(username);
-        if(!OptionalUser.isPresent()){
+        Optional<AppUser> OptionalUser = appUserRepository.findByUsername(username);
+        if (!OptionalUser.isPresent()) {
             throw new UsernameNotFoundException("Invalid username or password.");
         }
         AppUser user = OptionalUser.get();

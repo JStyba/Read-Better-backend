@@ -6,10 +6,12 @@ import com.readbetter.main.exceptions.ElementNotFound;
 import com.readbetter.main.model.AppUser;
 import com.readbetter.main.model.Definition;
 import com.readbetter.main.model.Entry;
+import com.readbetter.main.model.Pronunciation;
 import com.readbetter.main.repository.AppUserRepository;
 import com.readbetter.main.repository.EntryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,14 +24,48 @@ import java.util.Optional;
 
 @Service
 public class EntryService implements IEntryService {
-    @Autowired
+
     AppUserRepository appUserRepository;
-    @Autowired
     EntryRepository entryRepository;
+
+    @Autowired
+    public void setAppUserRepository(AppUserRepository appUserRepository) {
+        this.appUserRepository = appUserRepository;
+    }
+    @Autowired
+    public void setEntryRepository(EntryRepository entryRepository) {
+        this.entryRepository = entryRepository;
+    }
 
     @Override
     public JsonNode getDictionaryJson(String wordToLookUp) throws IOException {
         URL url = new URL("https://od-api.oxforddictionaries.com:443/api/v1/entries/en/" + wordToLookUp + "/definitions");
+        HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Accept", "application/json");
+        conn.setRequestProperty("app_id", "3c699787");
+        conn.setRequestProperty("app_key", "4a30da605e25de91cf692d808bdb069d");
+
+        if (conn.getResponseCode() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : "
+                    + conn.getResponseCode());
+        }
+        BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        StringBuilder stringBuilder = new StringBuilder();
+
+        String line = null;
+        while ((line = reader.readLine()) != null) {
+            stringBuilder.append(line + "\n");
+        }
+        String wordEntry = stringBuilder.toString();
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode arrNode = mapper.readTree(wordEntry).get("results");
+        return arrNode;
+    }
+
+    @Override
+    public JsonNode getDictionaryPronunciation(String wordToLookUp) throws IOException {
+        URL url = new URL("https://od-api.oxforddictionaries.com:443/api/v1/entries/en/" + wordToLookUp + "/pronunciations");
         HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Accept", "application/json");
@@ -115,6 +151,26 @@ public class EntryService implements IEntryService {
             }
         }
         return stringDefintions;
+    }
+
+    @Override
+    public List<Pronunciation> getPronunciationBrE(JsonNode jsonResponse) {
+        List<Pronunciation> audioFilesLinks = new ArrayList<>();
+        if (jsonResponse.isArray()) {
+            for (final JsonNode objNode : jsonResponse) {
+                JsonNode lexicalEntries = objNode.get("lexicalEntries");
+                for (final JsonNode obj1Node : lexicalEntries) {
+                    JsonNode pronunciations = obj1Node.get("pronunciations");
+                    for (final JsonNode obj2Node : pronunciations) {
+                        System.out.println("this is lexicalCategory: " + obj1Node.get("lexicalCategory").asText());
+                        System.out.println("this is lexicalCategory: " + obj2Node.get("audioFile").asText());
+                        audioFilesLinks.add(new Pronunciation(obj1Node.get("lexicalCategory").asText(), obj2Node.get("audioFile").asText()));
+
+                    }
+                }
+            }
+        }
+        return audioFilesLinks;
     }
 
 

@@ -5,6 +5,8 @@ import com.readbetter.main.exceptions.ElementNotFound;
 import com.readbetter.main.model.AppUser;
 import com.readbetter.main.model.Definition;
 import com.readbetter.main.model.Entry;
+import com.readbetter.main.model.Pronunciation;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -22,5 +24,7 @@ public interface IEntryService {
     void deleteEntry(String word, AppUser appUser) throws ElementNotFound;
     JsonNode getDictionaryJsonPl (String wordToLookUp) throws IOException;
     List<Definition> getTranslationsPl(JsonNode jsonResponse);
+    List<Pronunciation> getPronunciationBrE(JsonNode jsonResponse);
+    JsonNode getDictionaryPronunciation (String wordToLookUp) throws IOException;
 
 }

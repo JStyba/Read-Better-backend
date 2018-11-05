@@ -6,6 +6,7 @@ import com.readbetter.main.exceptions.ElementNotFound;
 import com.readbetter.main.model.AppUser;
 import com.readbetter.main.model.Definition;
 import com.readbetter.main.model.Entry;
+import com.readbetter.main.model.Pronunciation;
 import com.readbetter.main.model.dto.RespFactory;
 import com.readbetter.main.model.dto.Response;
 import com.readbetter.main.repository.AppUserRepository;
@@ -26,12 +27,24 @@ import java.util.Optional;
 public class EntryController {
 
 
-    @Autowired
     private EntryRepository entryRepository;
-    @Autowired
     private EntryService entryService;
-    @Autowired
     private AppUserRepository appUserRepository;
+
+    @Autowired
+    public void setEntryRepository(EntryRepository entryRepository) {
+        this.entryRepository = entryRepository;
+    }
+
+    @Autowired
+    public void setEntryService(EntryService entryService) {
+        this.entryService = entryService;
+    }
+
+    @Autowired
+    public void setAppUserRepository(AppUserRepository appUserRepository) {
+        this.appUserRepository = appUserRepository;
+    }
 
     @RequestMapping(path = "/translate", method = RequestMethod.GET)
     public ResponseEntity getEntry(@RequestParam(name = "word") String word) throws IOException {
@@ -105,5 +118,10 @@ public class EntryController {
         return RespFactory.ok("Entry deleted");
     }
 
+//    @RequestMapping(path = "/pronunciation", method = RequestMethod.GET)
+//    public List<Pronunciation> getPronunciation(@RequestParam(name = "word") String word) throws IOException {
+//        String inflection = entryService.getInflection(entryService.findInflection(word));
+//        return entryService.getPronunciationBrE(entryService.getDictionaryPronunciation(inflection));
+//    }
 
 }
