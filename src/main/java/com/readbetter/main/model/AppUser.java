@@ -30,6 +30,8 @@ public class AppUser {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.PERSIST)
     private List<Entry> entries;
+    @OneToMany(cascade = CascadeType.PERSIST)
+    private Set<BrowseHistory> browseHistory;
 
 
 public AppUser () {}
