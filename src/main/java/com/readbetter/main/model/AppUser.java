@@ -22,7 +22,7 @@ public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-
+    private Long loginCounter = 0L;
     private String username;
     private String email;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -65,5 +65,13 @@ public AppUser () {}
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Long getLoginCounter() {
+        return loginCounter;
+    }
+
+    public void setLoginCounter(Long loginCounter) {
+        this.loginCounter = loginCounter;
     }
 }
