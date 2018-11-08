@@ -81,6 +81,7 @@ public class AppUserService implements IAppUserService, UserDetailsService {
             throw new UserLoginAlreadyExistsException();
         }
         appUser.setPassword(encoder.encode(appUser.getPassword()));
+        appUser.setLoginCounter(0L);
         appUserRepository.save(appUser);
     }
 
