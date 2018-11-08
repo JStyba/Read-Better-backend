@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Entity
 public class BrowseHistory {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonIgnore
     private Long id;
     private String url;
