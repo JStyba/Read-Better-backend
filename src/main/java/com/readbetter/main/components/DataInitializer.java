@@ -110,8 +110,8 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
         Role adminRole = roleRepository.findByName("ADMIN");
         AppUser user = new AppUser();
         user.setUsername("Admin");
-        user.setPassword("stereo");
-        user.setEmail("test@test.com");
+        user.setPassword("wkretaczek");
+        user.setEmail("contact@read-better.pl");
         user.setRoles(Arrays.asList(adminRole));
         user.setEnabled(true);
         try {

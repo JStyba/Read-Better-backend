@@ -10,7 +10,7 @@ public class LocalDictService implements ILocalDictService {
 
     @Override
     public String readFile() throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader("src\\demo.txt"));
+        BufferedReader br = new BufferedReader(new FileReader("\\demo.txt"));
         try {
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
