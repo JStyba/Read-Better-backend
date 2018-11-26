@@ -14,6 +14,7 @@ import com.readbetter.main.service.BrowseHistoryService;
 import com.readbetter.main.service.LoginRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
@@ -66,17 +67,15 @@ public class AppUserController {
         }
         return RespFactory.created();
     }
+//    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
+//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+//    public ResponseEntity<?> deleteAppUser(@RequestParam (name = "username") String username) {
+//        AppUser appUser = appUserService.getCustomer(customerId);
+//        customerService.deleteCustomer(customer);
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 
-    @CrossOrigin(value = "*", maxAge = 3600)
-    @RequestMapping(path = "/list", method = RequestMethod.GET)
-    public String list() {
-        return "this is a message";
-    }
 
-    @RequestMapping(value = "/user", method = RequestMethod.GET)
-    public List<AppUser> listUser() {
-        return appUserService.findAll();
-    }
 
     @RequestMapping(path = "/save-url", method = RequestMethod.GET)
     public ResponseEntity<Response> saveUrl(@RequestParam(name = "username") String username, @RequestParam(name = "url") String url) {
@@ -123,15 +122,6 @@ public class AppUserController {
         LocalDateTime loggedOutAt = LocalDateTime.parse(loggedOut, formatter);
             loginRecordService.recordLogin(loggedInAt, loggedOutAt, username);
     }
-//    @RequestMapping(path = "/page", method = RequestMethod.GET)
-//    public ResponseEntity<Response> page(@RequestParam(name = "page") int page) {
-//        PageResponse<AppUser> list = appUserService.getUsers(page);
-//
-//        return RespFactory.result(list);
-//    }
-//    @RequestMapping(path = "/get", method = RequestMethod.GET)
-//    public AppUser login (@RequestParam (name ="login") String login) {
-//        AppUser user = appUserService.findByLogin(login).get();
-//        return user;
-//    }
+
+
 }

@@ -12,6 +12,8 @@ import com.readbetter.main.model.dto.Response;
 import com.readbetter.main.repository.AppUserRepository;
 import com.readbetter.main.repository.EntryRepository;
 import com.readbetter.main.service.EntryService;
+import com.readbetter.main.service.LocalDictService;
+import org.apache.catalina.connector.ResponseFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +32,12 @@ public class EntryController {
     private EntryRepository entryRepository;
     private EntryService entryService;
     private AppUserRepository appUserRepository;
+    private LocalDictService localDictService;
+
+    @Autowired
+    public void setLocalDictService(LocalDictService localDictService) {
+        this.localDictService = localDictService;
+    }
 
     @Autowired
     public void setEntryRepository(EntryRepository entryRepository) {
@@ -78,6 +86,24 @@ public class EntryController {
         return null;
     }
 
+    @RequestMapping(path = "/get-entries-with-def", method = RequestMethod.GET)
+    public List<Entry> getAllEntriesWithDefByUser(@RequestParam(name = "username") String username) throws IOException {
+
+
+        Optional<AppUser> user = appUserRepository.findByUsername(username);
+        if (user.isPresent()) {
+            List<Entry> entryList = entryService.getAllEntries(user.get().getId());
+            for (Entry e :
+                    entryList) {
+                String inflection = entryService.getInflection(entryService.findInflection(e.getWord()));
+                List<Definition> defOpt = entryService.cleanedDefinitionsFromJson(entryService.getDefinitions(entryService.getDictionaryJson(inflection)));
+                e.setDefinitions(defOpt);
+            }
+            return entryList;
+        }
+        return null;
+    }
+
     @RequestMapping(path = "/get", method = RequestMethod.GET)
     public List<Entry> getAllEntries() {
         return entryRepository.findAll();
@@ -116,10 +142,14 @@ public class EntryController {
         return RespFactory.ok("Entry deleted");
     }
 
-//    @RequestMapping(path = "/pronunciation", method = RequestMethod.GET)
+    //    @RequestMapping(path = "/pronunciation", method = RequestMethod.GET)
 //    public List<Pronunciation> getPronunciation(@RequestParam(name = "word") String word) throws IOException {
 //        String inflection = entryService.getInflection(entryService.findInflection(word));
 //        return entryService.getPronunciationBrE(entryService.getDictionaryPronunciation(inflection));
 //    }
-
+    @RequestMapping(path = "/read-dict", method = RequestMethod.GET)
+    public ResponseEntity<String> sendDict() throws IOException {
+        String dict = localDictService.readFile();
+        return RespFactory.result(dict);
+    }
 }
