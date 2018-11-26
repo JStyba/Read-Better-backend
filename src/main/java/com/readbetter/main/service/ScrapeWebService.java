@@ -3,6 +3,7 @@ package com.readbetter.main.service;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.readbetter.main.model.ScrapedWeb;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;

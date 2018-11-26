@@ -136,18 +136,23 @@ public class EntryService implements IEntryService {
     public List<Definition> getDefinitions(JsonNode jsonResponse) {
         List<Definition> stringDefintions = new ArrayList<>();
         if (jsonResponse.isArray()) {
-            for (final JsonNode objNode : jsonResponse) {
-                JsonNode lexicalEntries = objNode.get("lexicalEntries");
-                for (final JsonNode obj1Node : lexicalEntries) {
-                    JsonNode entries = obj1Node.get("entries");
-                    for (final JsonNode obj2Node : entries) {
-                        JsonNode senses = obj2Node.get("senses");
-                        for (final JsonNode obj3Node : senses) {
-                            JsonNode definitions = obj3Node.get("definitions");
-                            stringDefintions.add(new Definition(obj3Node.get("definitions").toString()));
+            try {
+                for (final JsonNode objNode : jsonResponse) {
+                    JsonNode lexicalEntries = objNode.get("lexicalEntries");
+                    for (final JsonNode obj1Node : lexicalEntries) {
+                        JsonNode entries = obj1Node.get("entries");
+                        for (final JsonNode obj2Node : entries) {
+                            JsonNode senses = obj2Node.get("senses");
+                            for (final JsonNode obj3Node : senses) {
+                                JsonNode definitions = obj3Node.get("definitions");
+                                stringDefintions.add(new Definition(obj3Node.get("definitions").toString()));
+
+                            }
                         }
                     }
                 }
+            } catch (NullPointerException npe) {
+
             }
         }
         return stringDefintions;
@@ -187,7 +192,7 @@ public class EntryService implements IEntryService {
 
     @Override
     public Optional<Entry> createEntryToSend(String word, List<Definition> definitions) {
-        Entry entry = new Entry("test", definitions);
+        Entry entry = new Entry(word, definitions);
         Optional<Entry> optionalEntry = Optional.ofNullable(entry);
         return optionalEntry;
     }
@@ -250,6 +255,8 @@ public class EntryService implements IEntryService {
         System.out.println(stringDefintions);
         return stringDefintions;
     }
+
+
 }
 
 

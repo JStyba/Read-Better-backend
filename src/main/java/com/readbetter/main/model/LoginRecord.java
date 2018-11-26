@@ -14,7 +14,7 @@ import java.time.temporal.ChronoUnit;
 @Entity
 public class LoginRecord {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
     private Long id;
     private LocalDateTime loggedInAt;

@@ -22,5 +22,5 @@ public interface IAppUserService {
 
     Optional<AppUser> findByUsername(String login);
 
-    Optional<AppUser> getUserWithUsernameAndPassword(LoginDto dto) throws UserDoesNotExistException;
+//    Optional<AppUser> getUserWithUsernameAndPassword(LoginDto dto) throws UserDoesNotExistException;
 }

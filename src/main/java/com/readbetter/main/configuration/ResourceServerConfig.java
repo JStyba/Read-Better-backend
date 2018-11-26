@@ -26,11 +26,20 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         http.
                 anonymous().disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/users/**","/entry/**").authenticated()
-                .antMatchers(HttpMethod.POST, "/users/**","/entry/**").authenticated()
-                .antMatchers(HttpMethod.DELETE, "/users/**","/entry/**").authenticated()
-                .antMatchers("/users/register").permitAll()
+                .antMatchers(HttpMethod.GET, "/users/**","/entry/**","/**").authenticated()
+                .antMatchers(HttpMethod.POST, "/users/**","/entry/**","/**").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/users/**","/entry/**","/**").authenticated()
+                .antMatchers(HttpMethod.GET, "/admin/**").access("hasRole('ADMIN')")
+                .antMatchers(HttpMethod.POST, "/admin/**").access("hasRole('ADMIN')")
+                .antMatchers(HttpMethod.DELETE, "/admin/**").access("hasRole('ADMIN')")
+                .antMatchers("/users/register").access("hasRole('ADMIN')")
                 .and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
+//        anonymous().disable()
+//               .requestMatchers().antMatchers("/entry/**","/scrape/")
+//
+//
+//                .and().authorizeRequests().antMatchers("/users/**","/entry/**").permitAll()
+//                .and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
     }
 
 }
