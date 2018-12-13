@@ -38,6 +38,7 @@ public class AppUserController {
     public void setLoginRecordService(LoginRecordService loginRecordService) {
         this.loginRecordService = loginRecordService;
     }
+
     @Autowired
     public void setBrowseHistoryService(BrowseHistoryService browseHistoryService) {
         this.browseHistoryService = browseHistoryService;
@@ -74,7 +75,6 @@ public class AppUserController {
 //        customerService.deleteCustomer(customer);
 //        return new ResponseEntity<>(HttpStatus.OK);
 //    }
-
 
 
     @RequestMapping(path = "/save-url", method = RequestMethod.GET)
@@ -116,12 +116,15 @@ public class AppUserController {
     }
 
     @RequestMapping(path = "/record-session", method = RequestMethod.GET)
-    public void recordSession(@RequestParam(name = "loggedIn") String loggedIn, @RequestParam(name = "loggedOut") String loggedOut, @RequestParam (name = "username") String username) {
+    public void recordSession(@RequestParam(name = "loggedIn") String loggedIn, @RequestParam(name = "loggedOut") String loggedOut, @RequestParam(name = "username") String username) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime loggedInAt = LocalDateTime.parse(loggedIn, formatter);
         LocalDateTime loggedOutAt = LocalDateTime.parse(loggedOut, formatter);
-            loginRecordService.recordLogin(loggedInAt, loggedOutAt, username);
+        loginRecordService.recordLogin(loggedInAt, loggedOutAt, username);
     }
 
-
+    @RequestMapping(path = "/record-login-count", method = RequestMethod.GET)
+    public void recordLoginCount(@RequestParam(name = "username") String username) {
+        loginRecordService.recordLoginCount(username);
+    }
 }

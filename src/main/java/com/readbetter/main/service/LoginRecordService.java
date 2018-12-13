@@ -38,9 +38,16 @@ public class LoginRecordService implements ILoginRecordService {
             loginRecord.setTimeSpentOnline(minutes);
             loginRecord.setAppUser(user.get());
             loginRecordRepository.saveAndFlush(loginRecord);
-            user.get().setLoginCounter(user.get().getLoginCounter()+1);
             appUserRepository.saveAndFlush(user.get());
 
+        }
+    }
+    @Override
+    public void recordLoginCount(String username) {
+        Optional<AppUser> user = appUserRepository.findByUsername(username);
+        if (user.isPresent()) {
+            user.get().setLoginCounter(user.get().getLoginCounter()+1);
+            appUserRepository.saveAndFlush(user.get());
         }
     }
 }
