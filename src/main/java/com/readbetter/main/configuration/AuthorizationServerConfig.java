@@ -18,7 +18,6 @@ import org.springframework.security.oauth2.provider.approval.UserApprovalHandler
 import org.springframework.security.oauth2.provider.error.DefaultWebResponseExceptionTranslator;
 import org.springframework.security.oauth2.provider.error.WebResponseExceptionTranslator;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import javax.sql.DataSource;

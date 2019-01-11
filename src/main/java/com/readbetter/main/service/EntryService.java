@@ -3,10 +3,7 @@ package com.readbetter.main.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.readbetter.main.exceptions.ElementNotFound;
-import com.readbetter.main.model.AppUser;
-import com.readbetter.main.model.Definition;
-import com.readbetter.main.model.Entry;
-import com.readbetter.main.model.Pronunciation;
+import com.readbetter.main.model.*;
 import com.readbetter.main.repository.AppUserRepository;
 import com.readbetter.main.repository.EntryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +14,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
 
 @Service
@@ -28,10 +24,12 @@ public class EntryService implements IEntryService {
     AppUserRepository appUserRepository;
     EntryRepository entryRepository;
 
+
     @Autowired
     public void setAppUserRepository(AppUserRepository appUserRepository) {
         this.appUserRepository = appUserRepository;
     }
+
     @Autowired
     public void setEntryRepository(EntryRepository entryRepository) {
         this.entryRepository = entryRepository;
@@ -256,7 +254,52 @@ public class EntryService implements IEntryService {
         return stringDefintions;
     }
 
-
+    @Override
+    public LinkedHashMap<String, LocalDateTime> returnNextInterval(Entry entry, boolean correct) {
+        String acviveRep = "";
+        String nextRep = "";
+        LinkedHashMap<String, LocalDateTime> tempRepMap = entry.getRepMap();
+        Iterator<Map.Entry<String, LocalDateTime>> it = tempRepMap.entrySet().iterator();
+        LocalDateTime now = LocalDateTime.now();
+        if (correct) {
+            while (it.hasNext()) {
+                Map.Entry<String, LocalDateTime> e = it.next();
+                if (e.getValue().isBefore(LocalDateTime.now())) {
+                    acviveRep = e.getKey();
+                    nextRep = it.next().getKey();
+                }
+            }
+            tempRepMap.put(acviveRep, LocalDateTime.now().plusYears(20));
+            switch (nextRep) {
+                case "TWO_DAY":
+                    tempRepMap.put(nextRep, LocalDateTime.now().plusDays(2));
+                    break;
+                case "WEEK":
+                    tempRepMap.put(nextRep, LocalDateTime.now().plusWeeks(1));
+                    break;
+                case "TWO_WEEK":
+                    tempRepMap.put(nextRep, LocalDateTime.now().plusWeeks(2));
+                    break;
+                case "MONTH":
+                    tempRepMap.put(nextRep, LocalDateTime.now().plusMonths(1));
+                    break;
+                case "TWO_MONTH":
+                    tempRepMap.put(nextRep, LocalDateTime.now().plusMonths(2));
+                    break;
+                case "HALF_YEAR":
+                    tempRepMap.put(nextRep, LocalDateTime.now().plusMonths(6));
+                    break;
+                case "YEAR":
+                    tempRepMap.put(nextRep, LocalDateTime.now().plusYears(1));
+                    break;
+            }
+        } if (!correct) {
+            tempRepMap.put(acviveRep, LocalDateTime.now().plusYears(20));
+            tempRepMap.put("DAY", LocalDateTime.now());
+        }
+        return tempRepMap;
+    }
 }
+
 
 

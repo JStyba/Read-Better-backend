@@ -2,12 +2,11 @@ package com.readbetter.main.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.readbetter.main.exceptions.ElementNotFound;
-import com.readbetter.main.model.AppUser;
-import com.readbetter.main.model.Definition;
-import com.readbetter.main.model.Entry;
-import com.readbetter.main.model.Pronunciation;
+import com.readbetter.main.model.*;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,5 +25,6 @@ public interface IEntryService {
     List<Definition> getTranslationsPl(JsonNode jsonResponse);
     List<Pronunciation> getPronunciationBrE(JsonNode jsonResponse);
     JsonNode getDictionaryPronunciation (String wordToLookUp) throws IOException;
+    LinkedHashMap<String, LocalDateTime> returnNextInterval (Entry entry, boolean correct);
 
 }

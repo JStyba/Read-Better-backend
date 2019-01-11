@@ -4,7 +4,6 @@ package com.readbetter.main.controller;
 import com.readbetter.main.exceptions.RegistrationException;
 import com.readbetter.main.model.AppUser;
 import com.readbetter.main.model.BrowseHistory;
-import com.readbetter.main.model.LoginRecord;
 import com.readbetter.main.model.dto.RespFactory;
 import com.readbetter.main.model.dto.Response;
 import com.readbetter.main.repository.AppUserRepository;
@@ -14,7 +13,6 @@ import com.readbetter.main.service.BrowseHistoryService;
 import com.readbetter.main.service.LoginRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;

@@ -2,11 +2,11 @@ package com.readbetter.main.controller;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import com.google.common.collect.ImmutableMap;
 import com.readbetter.main.exceptions.ElementNotFound;
-import com.readbetter.main.model.AppUser;
-import com.readbetter.main.model.Definition;
-import com.readbetter.main.model.Entry;
-import com.readbetter.main.model.Pronunciation;
+import com.readbetter.main.model.*;
 import com.readbetter.main.model.dto.RespFactory;
 import com.readbetter.main.model.dto.Response;
 import com.readbetter.main.repository.AppUserRepository;
@@ -111,7 +111,9 @@ public class EntryController {
 
     @RequestMapping(path = "/def", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<Response> deff(@RequestParam(name = "username") String username, @RequestBody JsonNode entryList) {
+    public ResponseEntity<Response> deff(
+            @RequestParam(name = "username") String username,
+            @RequestBody JsonNode entryList) {
 
         Optional<AppUser> user = appUserRepository.findByUsername(username);
         for (JsonNode n : entryList) {
@@ -120,6 +122,9 @@ public class EntryController {
             entry.setAppUser(user.get());
             entry.setEntryUrl(n.get("entryUrl").asText());
             entry.setTimestamp(n.get("timestamp").asText());
+            entry.setLanguage(n.get("language").asText());
+
+
             if (!entryRepository.findByWord(entry.getWord()).isPresent()) {
 
                 entryService.addEntryToDatabse(entry);
@@ -151,5 +156,18 @@ public class EntryController {
     public ResponseEntity<String> sendDict() throws IOException {
         String dict = localDictService.readFile();
         return RespFactory.result(dict);
+    }
+    @RequestMapping(path = "/learn", method = RequestMethod.GET)
+    public ResponseEntity<Response> setIntervals (@RequestParam(name = "word") String word, @RequestParam(name = "username") String username, @RequestParam(name = "correct") boolean correct) {
+        Optional<AppUser> user = appUserRepository.findByUsername(username);
+        Optional<Entry> entry = entryRepository.findByWord(word);
+        if (correct) {
+           entry.get().setRepMap(entryService.returnNextInterval(entry.get(), true));
+            entryRepository.saveAndFlush(entry.get());
+        } else if (!correct) {
+            entry.get().setRepMap(entryService.returnNextInterval(entry.get(), false));
+            entryRepository.saveAndFlush(entry.get());
+        } else return RespFactory.badRequest();
+        return RespFactory.ok("Interval updated");
     }
 }
