@@ -26,5 +26,6 @@ public interface IEntryService {
     List<Pronunciation> getPronunciationBrE(JsonNode jsonResponse);
     JsonNode getDictionaryPronunciation (String wordToLookUp) throws IOException;
     LinkedHashMap<String, LocalDateTime> returnNextInterval (Entry entry, boolean correct);
+    List<Entry> getEntriesToLearn (List<Entry> entryList);
 
 }

@@ -299,6 +299,22 @@ public class EntryService implements IEntryService {
         }
         return tempRepMap;
     }
+    @Override
+    public List<Entry> getEntriesToLearn (List<Entry> entryList) {
+        List<Entry> tempList = new ArrayList<>();
+        LocalDateTime now = LocalDateTime.now();
+        for (Entry e : entryList) {
+            Iterator<Map.Entry<String, LocalDateTime>> it = e.getRepMap().entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry<String, LocalDateTime> map = it.next();
+                if (map.getValue().isBefore(LocalDateTime.now())) {
+                    tempList.add(e);
+                }
+            }
+        }
+
+        return tempList;
+    }
 }
 
 

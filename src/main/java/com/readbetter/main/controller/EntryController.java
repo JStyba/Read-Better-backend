@@ -123,8 +123,6 @@ public class EntryController {
             entry.setEntryUrl(n.get("entryUrl").asText());
             entry.setTimestamp(n.get("timestamp").asText());
             entry.setLanguage(n.get("language").asText());
-
-
             if (!entryRepository.findByWord(entry.getWord()).isPresent()) {
 
                 entryService.addEntryToDatabse(entry);
@@ -170,4 +168,15 @@ public class EntryController {
         } else return RespFactory.badRequest();
         return RespFactory.ok("Interval updated");
     }
+    
+    @RequestMapping(path = "/get-words-to-learn", method = RequestMethod.GET)
+    public List<Entry> getWordsToLearn(@RequestParam(name = "username") String username) {
+        Optional<AppUser> user = appUserRepository.findByUsername(username);
+        if (user.isPresent()) {
+            List<Entry> entryList = entryService.getAllEntries(user.get().getId());
+
+            return entryService.getEntriesToLearn(entryList);
+        }
+        return null;
+    } 
 }
